@@ -69,6 +69,7 @@ onMounted(async () => {
     body: {
       name: signer.data.name,
       email: signer.data.email,
+      type: signer.data.type,
     },
   }).then(response => {
 

@@ -100,32 +100,10 @@ class SignatureController extends Controller
                 return response()->json(['message' => 'Invalid signer.'], 404);
             }
 
-            $signatureType = $request->input('signatureType');
-
-            switch ($signatureType) {
-                case 'draw':
-                    $signature = $request->input('signatureDraw');
-                    break;
-                case 'upload':
-                    $signature = $request->input('signatureFile');
-                    break;
-                case 'type':
-                    $signature = $request->input('signatureText');
-                    break;
-                default:
-                    $signature = $request->input('signatureHistory');
-            }
-
-            if ($signatureType !== 'history') {
-                $signaturePath = $this->storeBase64Signature($signature);
-            } else {
-                $signaturePath = $signature;
-            }
-
             //store the signature
             if (!empty($documentObj->signatures)) {
                 foreach ($documentObj->signatures as $signature) {
-                    $signature->signature = $signaturePath;
+                    $signature->signature = $documentObj->signature;
                     $signature->save();
                 }
             }
@@ -141,7 +119,7 @@ class SignatureController extends Controller
             $documentObj->location = $ipLocation;
             $documentObj->save();
 
-            $signedDoc = $this->setSignature($documentObj, $signaturePath, $signatureType);
+            $signedDoc = $this->setSignature($documentObj);
 
             $document = Document::with(['signers' => function($query) {
                 $query->where('type', '!=', SignerType::SENDER);
@@ -179,7 +157,7 @@ class SignatureController extends Controller
         return $signaturePath;
     }
 
-    private function setSignature($documentObj, $signaturePath, $signatureType)
+    private function setSignature($documentObj)
     {
         try {
             // Create a new FPDI instance
@@ -216,7 +194,7 @@ class SignatureController extends Controller
                 if (!empty($documentObj->signatures)) {
                     foreach ($documentObj->signatures as $signature) {
                         if ($pageNo == $signature->page_no) {
-                            $signatureActualPath = storage_path("app/" . $signaturePath);
+                            $signatureActualPath = storage_path("app/" . $documentObj->signature);
 
                             $imageHeightWidth = $this->calculateHeightWidth($signatureActualPath, $signature->height ?? null, $signature->width ?? null);
 
@@ -228,7 +206,6 @@ class SignatureController extends Controller
             }
 
             $documentObj->signed = 1;
-            $documentObj->signature = $signaturePath;
             $documentObj->save();
 
             $cert = $this->signedCertificate($documentObj);
@@ -276,8 +253,15 @@ class SignatureController extends Controller
                 Storage::delete($markedDoc);
             }
 
+            $reviewDoc = '/public/documents/review/' . $documentObj->signature_review_filename;
+            if (Storage::exists($reviewDoc)) {
+                Storage::delete($reviewDoc);
+            }
+
             $documentObj->mark_coordinate_filename = "";
             $documentObj->mark_coordinate_path = "";
+            $documentObj->signature_review_path = "";
+            $documentObj->signature_review_filename = "";
             $documentObj->save();
 
             return asset('storage/documents/signed/' . $documentObj->document->original_filename . '?v=' . time());

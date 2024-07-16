@@ -9,7 +9,9 @@ import stepOne from '@images/png/1.png'
 import stepTwo from '@images/png/2.png'
 import stepThree from '@images/png/3.png'
 import stepFour from '@images/png/4.png'
+import stepHidden from '@images/png/5.png'
 import { ref } from "vue"
+import SignatureReview from "@/components/app/stepper/SignatureReview.vue"
 
 definePage({ meta: { layout: 'blank' } })
 
@@ -35,6 +37,10 @@ const iconsSteps = [
   {
     title: 'Sign',
     icon: stepThree,
+  },
+  {
+    title: 'Review',
+    icon: stepHidden,
   },
   {
     title: 'Download',
@@ -92,8 +98,9 @@ const UserSignatureKey = ref(0)
 const currentStepperStep = ref(0)
 
 watch(currentStep, newStep => {
-  if (newStep === 1 || newStep === 2) {
+  if (newStep === 1) {
     documentReviewKey.value++
+    UserSignatureKey.value++
   }
 
   currentStepperStep.value = newStep
@@ -154,6 +161,16 @@ watch(currentStep, newStep => {
             <UserSignature :key="UserSignatureKey" @prev-step="prevStep" @nextStep="nextStep" :short-url="shortUrl" @alert="handleAlert" />
           </VWindowItem>
           <!-- 👉 end signature step -->
+
+          <VWindowItem>
+            <SignatureReview
+              :key="documentReviewKey"
+              :viewMode="fullView"
+              :currentStep="currentStepperStep"
+              @prev-step="prevStep"
+              @next-step="nextStep"
+            />
+          </VWindowItem>
 
           <!-- 👉 Download step -->
           <VWindowItem>

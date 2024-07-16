@@ -59,6 +59,7 @@ watchEffect(() => {
       :key="item.title"
     >
       <div
+        v-show="index !== 3"
         class="cursor-pointer app-stepper-step pa-1"
         :class="[
           (!props.isActiveStepValid && (isValidationEnabled)) && 'stepper-steps-invalid',
@@ -197,6 +198,7 @@ watchEffect(() => {
       :key="item.title"
     >
       <div
+        v-show="index !== 3"
         class="cursor-pointer app-stepper-step pa-1"
         :class="[
           (!props.isActiveStepValid && (isValidationEnabled)) && 'stepper-steps-invalid',

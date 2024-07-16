@@ -127,6 +127,7 @@ const handleSubmit = async () => {
   submitLoading.value = true
 
   const formData = new FormData()
+
   formData.append('signatureType', currentActiveTab.value)
   formData.append('signatureDraw', signature.draw)
   formData.append('signatureFile', signature.upload)
@@ -136,17 +137,13 @@ const handleSubmit = async () => {
   formData.append('email', signer.data.email)
   formData.append('otp', signer.data.otp)
 
-  const res = await $api('/signature/' + signer.data.shortUrl, {
+  const res = await $api('/signature/' + signer.data.shortUrl+'/review', {
     method: 'POST',
     body: formData,
   }).then(response => {
 
     submitLoading.value = false
-
-    document.setDocument(response.data)
-    document.setDownloadUrl(response.signedDoc)
-    signer.setAllSigner(response.data.signers)
-
+    document.setReviewSignedUrl(response.url)
     emit('nextStep', 1)
 
   }).catch(error => {

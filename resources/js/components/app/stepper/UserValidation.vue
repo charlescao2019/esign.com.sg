@@ -55,7 +55,7 @@ const handleSigner = async () => {
           document.setDocument(response.data)
           document.setDownloadUrl(response.document)
           signer.setAllSigner(response.data.signers)
-          emit('nextStep', 3)
+          emit('nextStep', 4)
         }else{
 
           document.setReviewSrc(response.document)

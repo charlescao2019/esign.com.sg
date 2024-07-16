@@ -173,6 +173,7 @@ class SignerController extends Controller
             ->selectRaw('MAX(created_at) as latest_created_at')
             ->where('name', $request->name)
             ->where('email', $request->email)
+            ->where('type', $request->type)
             ->whereNotNull('signature')
             ->groupBy('signature')
             ->orderByDesc('latest_created_at')

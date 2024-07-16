@@ -53,7 +53,8 @@ class SaveDocumentController extends Controller
         $extension = $request->file('document')->getClientOriginalExtension();
 
         $originalFilenameWithoutExtension =  pathinfo($originalFilename, PATHINFO_FILENAME);
-        $originalFilenameWithoutExtension =  str_replace(' ', '_', $originalFilenameWithoutExtension);
+        $originalFilenameWithoutExtension =  str_replace(' ', '_',  $originalFilenameWithoutExtension);
+        $originalFilenameWithoutExtension =  str_replace('-', '_',  $originalFilenameWithoutExtension);
         $originalFilenameWithoutSpecialChar = preg_replace('/[^A-Za-z0-9\-]/', '_', $originalFilenameWithoutExtension);
 
         $concatenatedNames = '';

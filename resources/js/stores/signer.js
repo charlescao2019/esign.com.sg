@@ -5,6 +5,7 @@ export const useSignerStore = defineStore('signer', {
     name: '',
     email: '',
     otp: '',
+    type: '',
     signers: {}
   }),
   actions: {
