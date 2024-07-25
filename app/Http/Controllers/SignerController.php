@@ -162,12 +162,12 @@ class SignerController extends Controller
             return response()->json(['message' => 'Invalid signer.'], 404);
         }
 
-        $signatureData = $this->fetchHistory($request);
+        $signatureData = $this->fetchHistory($shortUrl, $request);
 
         return response()->json(['data' => $signatureData], 200);
     }
 
-    private function fetchHistory($request)
+    private function fetchHistory($shortUrl, $request)
     {
         return Signer::select('signature')
             ->selectRaw('MAX(created_at) as latest_created_at')
@@ -175,6 +175,7 @@ class SignerController extends Controller
             ->where('email', $request->email)
             ->where('type', $request->type)
             ->whereNotNull('signature')
+            ->whereNotIn('short_url', [$shortUrl])
             ->groupBy('signature')
             ->orderByDesc('latest_created_at')
             ->take(6)

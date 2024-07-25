@@ -274,7 +274,7 @@ const handleSigner = async () => {
                     <!--                </button>-->
                     <!--              </span>-->
 
-                    <span v-if="(signerValue.type !== 'customer' && signerValue.signed === 0)">
+              <span v-if="(signerValue.type !== 'customer' && signerValue.signed === 0)">
                 <button @click="authenticateSigner(signerValue.id)">
                   <img height="50px" width="50px" :src="Authenticate" alt="login">
                   <VTooltip
@@ -284,7 +284,7 @@ const handleSigner = async () => {
                 </button>
               </span>
 
-                    <span v-else-if="signerValue.signed !== 0 && signerValue.type !== 'customer'">
+              <span v-else-if="signerValue.signed !== 0">
                 <a
                   :href="document.downloadUrl"
                   :download="document.getDocumentData.original_filename"
@@ -302,7 +302,9 @@ const handleSigner = async () => {
                 </a>
               </span>
 
-                    <span cols="2" v-if="signerValue.type === 'customer'">
+
+
+              <span cols="2" v-else-if="signerValue.type === 'customer' && signerValue.signed === 0">
                 <button @click="notifyCustomer(document.getDocumentData.short_url)">
                    <VIcon
                      icon="tabler-mail"

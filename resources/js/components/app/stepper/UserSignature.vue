@@ -69,44 +69,35 @@ const historyRef = ref(null)
 async function triggerSignature()
 {
 
-  if(currentActiveTab.value === 'type'){
+  if (currentActiveTab.value === 'draw'){
+
+    if(drawRef.value)
+    {
+      await drawRef.value.setSignature()
+    }
+
+  }else if(currentActiveTab.value === 'type'){
 
     if(typeRef.value)
     {
       await typeRef.value.setSignature()
     }
 
-  }
+  }else if(currentActiveTab.value === 'upload'){
 
-  // if (currentActiveTab.value === 'draw'){
-  //
-  //   if(drawRef.value)
-  //   {
-  //     await drawRef.value.setSignature()
-  //   }
-  //
-  // }else if(currentActiveTab.value === 'type'){
-  //
-  //   if(typeRef.value)
-  //   {
-  //     typeRef.value.setSignature()
-  //   }
-  //
-  // }else if(currentActiveTab.value === 'upload'){
-  //
-  //   if(uploadRef.value)
-  //   {
-  //     uploadRef.value.setSignature()
-  //   }
-  //
-  // }else if(currentActiveTab.value === 'history') {
-  //
-  //   if(historyRef.value)
-  //   {
-  //     historyRef.value.setSignature()
-  //   }
-  //
-  // }
+    if(uploadRef.value)
+    {
+      await uploadRef.value.setSignature()
+    }
+
+  }else if(currentActiveTab.value === 'history') {
+
+    if(historyRef.value)
+    {
+      await historyRef.value.setSignature()
+    }
+
+  }
 }
 
 const handleSubmit = async () => {
