@@ -96,8 +96,16 @@ class SaveDocumentController extends Controller
         $sender = $this->storeSigners($document->id, $data->input('sender_name'), $data->input('sender_email'), SignerType::SENDER);
         $senderURL[$data->input('sender_email')] = env("API_URL") . $sender['shortURL'];
 
+        $signers = $data->input('signers');
+        $order = ['customer', 'helper', 'staff'];
 
-        foreach ($data->input('signers') as $signerData) {
+        usort($signers, function($a, $b) use ($order) {
+            $posA = array_search($a['type'], $order);
+            $posB = array_search($b['type'], $order);
+            return $posA - $posB;
+        });
+
+        foreach ($signers as $signerData) {
 
             $signer = $this->storeSigners($document->id, $signerData['name'], $signerData['email'], $signerData['type'] ?? null);
 
@@ -134,4 +142,6 @@ class SaveDocumentController extends Controller
 
         return compact('signer', 'shortURL');
     }
+
+
 }
