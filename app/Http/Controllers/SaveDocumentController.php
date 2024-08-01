@@ -97,7 +97,7 @@ class SaveDocumentController extends Controller
         $senderURL[$data->input('sender_email')] = env("API_URL") . $sender['shortURL'];
 
         $signers = $data->input('signers');
-        $order = ['customer', 'helper', 'staff'];
+        $order = ['customer', 'staff', 'helper'];
 
         usort($signers, function($a, $b) use ($order) {
             $posA = array_search($a['type'], $order);
