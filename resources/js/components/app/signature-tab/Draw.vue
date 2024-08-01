@@ -11,7 +11,7 @@ const props = defineProps({
 
 const emit = defineEmits(['alert','signature'])
 
-defineExpose({ setSignature })
+defineExpose({ setSignature, resizeCanvas })
 
 const signer = useSignerStore()
 
@@ -60,8 +60,15 @@ const loadImage = imageUrl => {
 };
 
 
+function resizeCanvas(){
+  setTimeout(() => {
+    signaturePadRef.value.resizeCanvas()
+  }, 0)
+}
+
 onMounted(async () => {
 
+  resizeCanvas()
   reset()
 
   const res = await $api('/signature-history/' + signer.data.shortUrl, {
@@ -84,10 +91,6 @@ onMounted(async () => {
     emit('alert', { data: error, type: 'error' })
   })
 
-
-  setTimeout(() => {
-    signaturePadRef.value.resizeCanvas()
-  }, 0)
 })
 
 function setSignature(){
