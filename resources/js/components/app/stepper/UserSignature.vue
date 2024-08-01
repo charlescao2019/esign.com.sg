@@ -16,6 +16,8 @@ const props = defineProps({
 
 const emit = defineEmits(['alert', 'prevStep', 'nextStep'])
 
+defineExpose({ resizeCanvas })
+
 const signer = useSignerStore()
 const document = useDocumentStore()
 
@@ -97,6 +99,12 @@ async function triggerSignature()
       await historyRef.value.setSignature()
     }
 
+  }
+}
+
+function resizeCanvas(){
+  if(drawRef.value){
+    drawRef.value.resizeCanvas()
   }
 }
 

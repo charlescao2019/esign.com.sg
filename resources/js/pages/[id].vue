@@ -96,11 +96,18 @@ const prevStep = step => {
 const documentReviewKey = ref(0)
 const UserSignatureKey = ref(0)
 const currentStepperStep = ref(0)
+const signatureRef = ref(null)
 
 watch(currentStep, newStep => {
   if (newStep === 1) {
     documentReviewKey.value++
     UserSignatureKey.value++
+  }
+
+  if(newStep === 2) {
+    if(signatureRef.value){
+      signatureRef.value.resizeCanvas()
+    }
   }
 
   currentStepperStep.value = newStep
@@ -158,7 +165,7 @@ watch(currentStep, newStep => {
 
           <!-- 👉 signature step -->
           <VWindowItem>
-            <UserSignature :key="UserSignatureKey" @prev-step="prevStep" @nextStep="nextStep" :short-url="shortUrl" @alert="handleAlert" />
+            <UserSignature ref="signatureRef" :key="UserSignatureKey" @prev-step="prevStep" @nextStep="nextStep" :short-url="shortUrl" @alert="handleAlert" />
           </VWindowItem>
           <!-- 👉 end signature step -->
 
