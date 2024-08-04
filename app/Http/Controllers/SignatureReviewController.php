@@ -128,37 +128,10 @@ class SignatureReviewController extends Controller
                 }
             }
 
-            $cert = $this->signedCertificate($signer);
-
-            // set the source file
-            $pdf->setSourceFile(storage_path('app/public/documents/certificate/' . $cert));
-
-            // import page 1
-            $tplIdx = $pdf->importPage(1);
-
-            // get the size of the imported page
-            $size = $pdf->getTemplateSize($templateId);
-
-            // create a page (landscape or portrait depending on the imported page size)
-            if ($size['width'] > $size['height']) {
-                $pdf->AddPage('L', array($size['width'], $size['height']));
-            } else {
-                $pdf->AddPage('P', array($size['width'], $size['height']));
-            }
-
-            // use the imported page as the template
-            $pdf->useTemplate($tplIdx);
-
             $reviewFile = $signer->email . '_' . uniqid() . '.pdf';
             $outputPath = storage_path("app/public/documents/review/" . $reviewFile);
 
             $pdf->Output($outputPath, 'F');
-
-            //remove certificate
-            if (Storage::exists('/public/documents/certificate/' . $cert)) {
-                // Delete the file
-                Storage::delete('/public/documents/certificate/' . $cert);
-            }
 
             return $outputPath;
         } catch (Exception $e) {
