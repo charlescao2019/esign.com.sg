@@ -154,12 +154,12 @@ const handleSigner = async () => {
       </VCard>
 
       <template v-if="signer.all.length > 0">
-        <VRow>
+        <VRow class="mb-5">
           <template
             v-for="(signerValue, index) in signer.all"
             :key="index"
           >
-            <VCol cols="12">
+            <VCol v-if="(signer.type?.toUpperCase() === 'CUSTOMER' && signerValue.type?.toUpperCase() === 'CUSTOMER') || (signer.type?.toUpperCase() !== 'CUSTOMER')" cols="12">
               <VAlert
                 border="start"
                 :border-color="(signerValue.type.toUpperCase() === 'CUSTOMER' || signerValue.type.toUpperCase() === 'HELPER') ? 'warning' : 'primary'"
@@ -263,16 +263,6 @@ const handleSigner = async () => {
                       >WhatsApp
                       </VTooltip>
                     </a>
-
-                    <!--              <span v-if="(signerValue.type !== 'customer' && signerValue.signed === 0) && (!props.viewMode || signer.data.type === 'sender')">-->
-                    <!--                <button @click="authenticateSigner(signerValue.id)">-->
-                    <!--                  <img height="80px" width="80px" :src="Authenticate" alt="login">-->
-                    <!--                  <VTooltip-->
-                    <!--                    activator="parent"-->
-                    <!--                    location="bottom"-->
-                    <!--                  >ESign</VTooltip>-->
-                    <!--                </button>-->
-                    <!--              </span>-->
 
               <span v-if="(signerValue.type !== 'customer' && signerValue.signed === 0)">
                 <button @click="authenticateSigner(signerValue.id)">
