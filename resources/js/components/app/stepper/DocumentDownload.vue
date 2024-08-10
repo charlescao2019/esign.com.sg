@@ -153,17 +153,19 @@ const handleSigner = async () => {
               </VBtn>
             </div>
           </template>
-          <VRow v-else>
+          <span v-else>
             <span class="preview-link">{{ document.getDocumentData.original_filename }}</span>
             <br>
             <span class="text-h6">Created At <b>{{
                 formatDateTime(document.getDocumentData.created_at)
               }}</b> By <b>{{ document.getDocumentData.company_name }} </b> </span>
-            <VCol
-              sm="12"
-              md="6"
-              class="d-flex justify-md-start justify-center"
-            >
+
+            <VRow class="mt-5">
+              <VCol
+                sm="12"
+                md="6"
+                class="d-flex justify-md-start justify-center"
+              >
               <a
                 :href="document.downloadUrl"
                 :download="document.getDocumentData.original_filename"
@@ -176,7 +178,7 @@ const handleSigner = async () => {
                 </VBtn>
               </a>
             </VCol>
-            <VCol
+              <VCol
               sm="12"
               md="6"
               class="d-flex justify-md-end justify-center"
@@ -185,7 +187,8 @@ const handleSigner = async () => {
                   document.getDocumentData.total_signed
                 }} / {{ document.getDocumentData.total_signer }} SIGNATURES</span>
             </VCol>
-          </VRow>
+            </VRow>
+          </span>
 
         </VCardText>
 
