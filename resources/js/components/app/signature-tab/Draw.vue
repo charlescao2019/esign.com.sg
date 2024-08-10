@@ -11,7 +11,7 @@ const props = defineProps({
 
 const emit = defineEmits(['alert','signature'])
 
-defineExpose({ setSignature, resizeCanvas })
+defineExpose({ setSignature, resizeCanvas, fetchHistory })
 
 const signer = useSignerStore()
 
@@ -19,6 +19,7 @@ const signaturePadRef = ref("")
 let signatureHistory = ref("")
 
 const loadImage = imageUrl => {
+  console.log(imageUrl)
   const canvas = signaturePadRef.value.$el.querySelector('canvas')
   const context = canvas.getContext('2d')
   const image = new Image()
@@ -42,13 +43,14 @@ const loadImage = imageUrl => {
   }
 
   image.onload = () => {
-    resizeCanvasAndDrawImage();
+    resizeCanvasAndDrawImage()
 
-    const signature = canvas.toDataURL('image/png');
-    isLoading.value = false;
+    const signature = canvas.toDataURL('image/png')
+
+    isLoading.value = false
 
     if (signature) {
-      emit('signature', { signature: signature, type: 'draw' });
+      emit('signature', { signature: signature, type: 'draw' })
     }
   };
 
@@ -70,7 +72,11 @@ onMounted(async () => {
 
   resizeCanvas()
   reset()
+  fetchHistory()
 
+})
+
+async function fetchHistory(){
   const res = await $api('/signature-history/' + signer.data.shortUrl, {
     method: 'POST',
     body: {
@@ -90,8 +96,7 @@ onMounted(async () => {
   }).catch(error => {
     emit('alert', { data: error, type: 'error' })
   })
-
-})
+}
 
 function setSignature(){
 

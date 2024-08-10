@@ -32,7 +32,7 @@ class SignerController extends Controller
             return response()->json(['message' => 'Invalid signer url.'], 404);
         }
 
-        return response()->json(['name' => $signerData->name, 'email' => $signerData->email, 'type' => $signerData->type], 200);
+        return response()->json(['name' => $signerData->name, 'email' => $signerData->email, 'type' => $signerData->type, 'signed' => $signerData->signed], 200);
     }
 
     public function notifyCustomer($shortUrl)

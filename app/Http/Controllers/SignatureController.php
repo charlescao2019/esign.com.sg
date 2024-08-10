@@ -295,11 +295,11 @@ class SignatureController extends Controller
             // Set the source file
             if ($signer->document->signed == 1) {
                 $documentPath = storage_path('app/' . $signer->document->signed_path . '/' . $signer->document->signed_filename);
+                $pageCount = $pdf->setSourceFile($documentPath) - 1;
             } else {
                 $documentPath = storage_path('app/' . $signer->document->original_path . '/' . $signer->document->original_filename);
+                $pageCount = $pdf->setSourceFile($documentPath);
             }
-
-            $pageCount = $pdf->setSourceFile($documentPath);
 
             for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
                 // import a page
@@ -473,59 +473,6 @@ class SignatureController extends Controller
     }
 
 
-    //    public function frame()
-    //    {
-    //
-    ////        return View('signFrame');
-    //
-    //        $html = View('signFrame')->render();
-    //        $selector = '.frame';
-    //        $targetPath = storage_path('app/public/test/'.time().'.jpeg');
-    //        Browsershot::html($html)
-    //            ->select($selector)
-    //            ->save($targetPath);
-    //
-    //
-    //
-    //        // Specify the path to the input and output images
-    //        $inputImagePath = $targetPath;
-    //        $outputImagePath = storage_path('app/public/transparent/'.time().'.png');
-    //        // Specify the background color to be removed (white in this example)
-    //        $backgroundColor = array(255, 255, 255);
-    //        // Load the input image
-    //        $inputImage = imagecreatefromjpeg($inputImagePath);
-    //        // Get the image dimensions
-    //        $imageWidth = imagesx($inputImage);
-    //        $imageHeight = imagesy($inputImage);
-    //        // Create a new true color image with alpha channel
-    //        $outputImage = imagecreatetruecolor($imageWidth, $imageHeight);
-    //        $transparency = imagecolorallocatealpha($outputImage, 0, 0, 0, 127);
-    //        imagefill($outputImage, 0, 0, $transparency);
-    //        imagesavealpha($outputImage, true);
-    //        // Loop through each pixel in the input image
-    //        for ($x = 0; $x < $imageWidth; $x++) {
-    //            for ($y = 0; $y < $imageHeight; $y++) {
-    //                // Get the RGB values of the current pixel
-    //                     $rgb = imagecolorat($inputImage, $x, $y);
-    //                     $colors = imagecolorsforindex($inputImage, $rgb);
-    //                    // Check if the pixel color is the background color
-    //            if ($colors['red'] === $backgroundColor[0] && $colors['green'] === $backgroundColor[1] && $colors['blue'] === $backgroundColor[2]) {
-    //                 // Make the pixel transparent in the output image
-    //                 imagesetpixel($outputImage, $x, $y, $transparency);
-    //            } else {
-    //                 // Copy non-background pixels to the output image
-    //                 imagesetpixel($outputImage, $x, $y, $rgb);
-    //                }
-    //            }
-    //        }
-    //            // Save the output image with a transparent background
-    //            imagepng($outputImage, $outputImagePath);
-    //            // Free up memory
-    //            imagedestroy($inputImage);
-    //            imagedestroy($outputImage);
-    //        echo 'Image background removed and saved as ' . $outputImagePath;
-    //
-    //    }
     public function calculateHeightWidth(string $signatureActualPath, $height, $width)
     {
         $height = $height ?? 15;

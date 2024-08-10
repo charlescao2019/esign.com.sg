@@ -107,6 +107,7 @@ watch(currentStep, newStep => {
   if(newStep === 2) {
     if(signatureRef.value){
       signatureRef.value.resizeCanvas()
+      signatureRef.value.fetchHistory()
     }
   }
 

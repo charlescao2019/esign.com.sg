@@ -16,7 +16,7 @@ const props = defineProps({
 
 const emit = defineEmits(['alert', 'prevStep', 'nextStep'])
 
-defineExpose({ resizeCanvas })
+defineExpose({ resizeCanvas, fetchHistory })
 
 const signer = useSignerStore()
 const document = useDocumentStore()
@@ -105,6 +105,12 @@ async function triggerSignature()
 function resizeCanvas(){
   if(drawRef.value){
     drawRef.value.resizeCanvas()
+  }
+}
+
+function fetchHistory(){
+  if(drawRef.value){
+    drawRef.value.fetchHistory()
   }
 }
 
