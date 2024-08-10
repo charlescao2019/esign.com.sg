@@ -99,11 +99,24 @@ class SaveDocumentController extends Controller
         $signers = $data->input('signers');
         $order = ['customer', 'staff', 'helper'];
 
-        usort($signers, function($a, $b) use ($order) {
-            $posA = array_search($a['type'], $order);
-            $posB = array_search($b['type'], $order);
+        usort($signers, function($a, $b) use ($signers, $order) {
+            $typeA = strtolower($a['type']);
+            $typeB = strtolower($b['type']);
+
+            $posA = array_search($typeA, $order);
+            $posB = array_search($typeB, $order);
+
+            $posA = $posA === false ? count($order) : $posA;
+            $posB = $posB === false ? count($order) : $posB;
+
+            // If the positions are equal, sort by the original order
+            if ($posA === $posB) {
+                return array_search($a, $signers) - array_search($b, $signers);
+            }
+
             return $posA - $posB;
         });
+
 
         foreach ($signers as $signerData) {
 

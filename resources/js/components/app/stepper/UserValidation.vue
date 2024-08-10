@@ -16,6 +16,7 @@ const emit = defineEmits(['alert', 'nextStep'])
 const document = useDocumentStore()
 const signer = useSignerStore()
 
+const customerSigned = ref(0)
 const signerName = ref('')
 const signerEmail = ref('')
 const signerType = ref('')
@@ -120,7 +121,12 @@ const fetchSigner = async () => {
       signerType.value = response.type
 
       if(response.type === 'sender' || response.type === 'customer'){
-        handleSigner()
+
+        if(response.type === 'customer' && response.signed === 1){
+          customerSigned.value = 1
+        }else{
+          handleSigner()
+        }
       }
 
     }).catch(error => {
@@ -135,48 +141,20 @@ const fetchSigner = async () => {
 <template>
   <VForm ref="refSignerWindowForm">
     <VRow class="mt-5">
-      <VCol
-        class="mx-auto my-5"
-        md="8"
-        sm="12"
-      >
-        <p class="text-h5 text-center mx-auto font-weight-medium">
-          Request OTP to continue
-        </p>
-
-        <VForm
-          ref="refSignerForm"
-          @submit.prevent="handleSigner"
+      <template v-if="customerSigned === 0">
+        <VCol
+          class="mx-auto my-5"
+          md="8"
+          sm="12"
         >
-          <VCol
-            class="mx-auto"
-            md="8"
-            sm="8"
-            xs="10"
+          <p class="text-h5 text-center mx-auto font-weight-medium">
+            Request OTP to continue
+          </p>
+
+          <VForm
+            ref="refSignerForm"
+            @submit.prevent="handleSigner"
           >
-            <AppTextField
-              v-model="signerName"
-              label="Name"
-              :rules="[requiredValidator]"
-            />
-          </VCol>
-
-          <VCol
-            class="mx-auto"
-            md="8"
-            sm="8"
-            xs="10"
-          >
-            <AppTextField
-              v-model="signerEmail"
-              label="Email"
-              placeholder=""
-              :rules="[requiredValidator, emailValidator]"
-            />
-          </VCol>
-
-
-          <template v-if="otpSent">
             <VCol
               class="mx-auto"
               md="8"
@@ -184,54 +162,96 @@ const fetchSigner = async () => {
               xs="10"
             >
               <AppTextField
-                v-model="signerOTP"
-                name="otp"
-                label="Check your email for verification code"
-                placeholder=""
+                v-model="signerName"
+                label="Name"
+                :rules="[requiredValidator]"
               />
             </VCol>
-          </template>
 
-          <VCol
-            class="mx-auto"
-            md="8"
-            sm="8"
-            xs="10"
-          >
-            <VRow>
+            <VCol
+              class="mx-auto"
+              md="8"
+              sm="8"
+              xs="10"
+            >
+              <AppTextField
+                v-model="signerEmail"
+                label="Email"
+                placeholder=""
+                :rules="[requiredValidator, emailValidator]"
+              />
+            </VCol>
+
+
+            <template v-if="otpSent">
               <VCol
-                v-if="otpSent"
-                class="mb-4 mx-auto"
-                cols="12"
-                sm="6"
+                class="mx-auto"
+                md="8"
+                sm="8"
+                xs="10"
               >
-                <VBtn
-                  :loading="signerLoader"
-                  type="submit"
-                  color="success"
-                  block
-                >
-                  <span class="text-h5 text-white">submit</span>
-                </VBtn>
+                <AppTextField
+                  v-model="signerOTP"
+                  name="otp"
+                  label="Check your email for verification code"
+                  placeholder=""
+                />
               </VCol>
-              <VCol
-                class="mb-4 mx-auto"
-                cols="12"
-                :sm="otpSent ? 6 : 12"
-              >
-                <VBtn
-                  :loading="otpLoader"
-                  color="info"
-                  block
-                  @click="requestOTP"
+            </template>
+
+            <VCol
+              class="mx-auto"
+              md="8"
+              sm="8"
+              xs="10"
+            >
+              <VRow>
+                <VCol
+                  v-if="otpSent"
+                  class="mb-4 mx-auto"
+                  cols="12"
+                  sm="6"
                 >
-                  <span class="text-h5 text-white">Request OTP</span>
-                </VBtn>
-              </VCol>
-            </VRow>
-          </VCol>
-        </VForm>
-      </VCol>
+                  <VBtn
+                    :loading="signerLoader"
+                    type="submit"
+                    color="success"
+                    block
+                  >
+                    <span class="text-h5 text-white">submit</span>
+                  </VBtn>
+                </VCol>
+                <VCol
+                  class="mb-4 mx-auto"
+                  cols="12"
+                  :sm="otpSent ? 6 : 12"
+                >
+                  <VBtn
+                    :loading="otpLoader"
+                    color="info"
+                    block
+                    @click="requestOTP"
+                  >
+                    <span class="text-h5 text-white">Request OTP</span>
+                  </VBtn>
+                </VCol>
+              </VRow>
+            </VCol>
+          </VForm>
+        </VCol>
+      </template>
+      <template v-else>
+        <VCol
+          class="mx-auto my-5"
+          md="8"
+          sm="12"
+        >
+          <p class="text-h5 text-center mx-auto font-weight-medium">
+            You have already completed your signature, Thank you
+          </p>
+        </VCol>
+
+      </template>
     </VRow>
   </VForm>
 </template>
