@@ -19,13 +19,13 @@ class NotifySender extends Mailable
      */
 
     public $document;
-    public $signerEmail;
-    public $signerName;
-    public function __construct($signerName, $signerEmail, $document)
+    public $signer;
+
+    public function __construct($document, $signer)
     {
-        $this->signerName = $signerName;
-        $this->signerEmail = $signerEmail;
-        $this->document = $document;    }
+        $this->document = $document;
+        $this->signer = $signer;
+    }
 
     /**
      * Build the message.
@@ -34,9 +34,10 @@ class NotifySender extends Mailable
      */
     public function build()
     {
+        $url = asset('storage/documents/signed/' . $this->document->signed_filename);
         return
             $this->from(env('MAIL_FROM_ADDRESS'), 'E-sign')
-                ->subject("A new sign has been added")
-                ->view('notifySender', ['senderName' => $this->signerName, 'senderEmail' => $this->signerEmail, 'document' => $this->document]);
+            ->subject("Customer's signature completed")
+            ->view('notifySender', ['senderName' => $this->signer->name, 'senderEmail' => $this->signer->email, 'senderType' => $this->signer->type, 'document' => $this->document, 'url' => $url]);
     }
 }

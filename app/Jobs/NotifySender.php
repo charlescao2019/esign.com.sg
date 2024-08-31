@@ -13,17 +13,15 @@ class NotifySender implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $notifier;
     public $document;
-    public $signerEmail;
-    public $signerName;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($signerName, $signerEmail, $document)
+    public function __construct($notifier, $document)
     {
-        $this->signerName = $signerName;
-        $this->signerEmail = $signerEmail;
+        $this->notifier = $notifier;
         $this->document = $document;
     }
 
@@ -32,6 +30,6 @@ class NotifySender implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->document->sender_email)->send(new \App\Mail\NotifySender($this->signerName, $this->signerEmail, $this->document));
+        Mail::to($this->document->sender_email)->send(new \App\Mail\NotifySender($this->document, $this->notifier));
     }
 }
