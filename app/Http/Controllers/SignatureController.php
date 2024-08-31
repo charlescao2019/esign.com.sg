@@ -69,7 +69,7 @@ class SignatureController extends Controller
         }
 
         $signerDoc = $this->markDocument($documentObj, $request);
-        $documentData = Document::with(['signers' => function($query) {
+        $documentData = Document::with(['signers' => function ($query) {
             $query->whereNotIn('type', [SignerType::SENDER]);
         }])->find($documentObj->document->id);
 
@@ -121,7 +121,7 @@ class SignatureController extends Controller
 
             $signedDoc = $this->setSignature($documentObj);
 
-            $document = Document::with(['signers' => function($query) {
+            $document = Document::with(['signers' => function ($query) {
                 $query->where('type', '!=', SignerType::SENDER);
             }])->find($documentObj->document->id);
 
@@ -136,7 +136,13 @@ class SignatureController extends Controller
             $document->signed = 1;
             $document->save();
 
-//            dispatch(new NotifySender($request->name, $request->email, $document));
+            $associatedNotifiers = Signer::where('document_id', $document->id)->get();
+
+            foreach ($associatedNotifiers as $notifier) {
+                if (isset($notifier->email)) {
+                    dispatch(new NotifySender($notifier, $document));
+                }
+            }
 
             return response()->json([
                 'message' => 'Record stored successfully',
@@ -273,15 +279,14 @@ class SignatureController extends Controller
     private function markDocument($signer, $request)
     {
         if ($signer->signed === 1) {
-            return ['signed' => 1, 'document' => asset('storage/documents/signed/' . $signer->document->signed_filename )];
+            return ['signed' => 1, 'document' => asset('storage/documents/signed/' . $signer->document->signed_filename)];
         } else if ($signer->type === SignerType::SENDER) {
 
-            if($signer->document->signed === 1){
+            if ($signer->document->signed === 1) {
                 return ['signed' => 1, 'document' => asset('storage/documents/signed/' . $signer->document->signed_filename)];
-            }else{
+            } else {
                 return ['signed' => 1, 'document' => asset('storage/documents/original/' . $signer->document->original_filename)];
             }
-
         }
 
         if (!empty($signer->mark_coordinate_filename)) {
@@ -340,14 +345,14 @@ class SignatureController extends Controller
                             $textY = $y + $height + $margin; // Adjusting for font height and margin
 
                             // Add the text
-//                        $pdf->Text($textX, $textY, $text);
+                            //                        $pdf->Text($textX, $textY, $text);
 
                             $pdf->SetDrawColor(0, 0, 0);
 
                             $calculatedY = $y + (($height / 2) - 7);
 
                             // Draw the border rectangle
-//                            $pdf->Rect($x - 18, $calculatedY, 15, 15);
+                            //                            $pdf->Rect($x - 18, $calculatedY, 15, 15);
                             $pdf->Image(storage_path("app/public/arrow.gif"), $x - 18, $calculatedY, 15, 15);
                         }
                     }
@@ -476,10 +481,9 @@ class SignatureController extends Controller
     public function calculateHeightWidth(string $signatureActualPath, $height, $width)
     {
         $height = $height ?? 15;
-//        $width = $width ?? 30;
+        //        $width = $width ?? 30;
 
-        if(is_null($width))
-        {
+        if (is_null($width)) {
 
             if (!file_exists($signatureActualPath)) {
                 echo "Error: Image file not found at $signatureActualPath";

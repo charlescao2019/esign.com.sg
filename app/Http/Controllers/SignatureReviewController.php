@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Constants\SignerType;
 use App\Http\Requests\RequestOTP;
 use App\Http\Requests\StoreSignature;
-use App\Jobs\NotifySender;
 use App\Models\Document;
 use App\Models\Signer;
 use Carbon\Carbon;
@@ -66,7 +65,6 @@ class SignatureReviewController extends Controller
                 'message' => 'Review created successfully',
                 'url' => $reviewSignedDoc,
             ], Response::HTTP_OK);
-
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
@@ -201,10 +199,9 @@ class SignatureReviewController extends Controller
     public function calculateHeightWidth(string $signatureActualPath, $height, $width)
     {
         $height = $height ?? 15;
-//        $width = $width ?? 30;
+        //        $width = $width ?? 30;
 
-        if(is_null($width))
-        {
+        if (is_null($width)) {
 
             if (!file_exists($signatureActualPath)) {
                 echo "Error: Image file not found at $signatureActualPath";
