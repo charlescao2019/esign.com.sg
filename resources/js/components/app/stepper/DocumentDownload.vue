@@ -116,6 +116,10 @@ const handleSigner = async () => {
     if (response.signed === 1) {
       document.setDocument(response.data)
       document.setDownloadUrl(response.document)
+      response.data.signers.sort((a, b) => {
+        const order = ['customer', 'staff', 'helper']
+        return order.indexOf(a.type) - order.indexOf(b.type)
+      })
       signer.setAllSigner(response.data.signers)
     } else {
 
