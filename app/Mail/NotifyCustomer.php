@@ -34,6 +34,7 @@ class NotifyCustomer extends Mailable
      */
     public function build()
     {
+        info('Notify Customer Mail');
         $url = asset('storage/documents/signed/' . $this->document->signed_filename);
         return
             $this->from(env('MAIL_FROM_ADDRESS'), 'E-sign')

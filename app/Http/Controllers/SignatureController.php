@@ -129,7 +129,7 @@ class SignatureController extends Controller
             $document->last_signed_time = Carbon::now();
             $document->total_signed = $document->total_signed + 1;
 
-            if ($document->total_signed + 1 >= $document->total_signer) {
+            if ($document->total_signed == $document->total_signer) {
                 $document->status = 'Completed';
                 $document->completed_signed = 1;
             }
@@ -138,7 +138,9 @@ class SignatureController extends Controller
             $document->save();
 
             if (isset($documentObj->email) && $documentObj->type == "customer") {
+                info('Notify Customer Start');
                 dispatch(new NotifyCustomer($documentObj, $document));
+                info('Notify Customer End');
             }
 
             dispatch(new NotifySender($documentObj, $document));

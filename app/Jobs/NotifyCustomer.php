@@ -30,6 +30,7 @@ class NotifyCustomer implements ShouldQueue
      */
     public function handle(): void
     {
+        info('Notify Customer Job');
         Mail::to($this->notifier->email)->send(new \App\Mail\NotifyCustomer($this->document, $this->notifier));
     }
 }

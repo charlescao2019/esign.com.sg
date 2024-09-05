@@ -66,13 +66,11 @@
                 <p class="text">A new signature has been added to your document by {{ $senderName }}
                     ({{ $senderEmail }})</p>
 
-                @if ($senderType != 'customer')
-                    @if ($document->completed_signed)
-                        <p>All Signer Has completed their sign</p>
-                    @else
-                        <p>As it stands, {{ $document->total_signed }} out of {{ $document->total_signer }} required
-                            signatures have been obtained.</p>
-                    @endif
+                @if ($document->completed_signed)
+                    <p>All Signer Has completed their sign</p>
+                @else
+                    <p>As it stands, {{ $document->total_signed }} out of {{ $document->total_signer }} required
+                        signatures have been obtained.</p>
                 @endif
 
                 <div class="otp-box">
