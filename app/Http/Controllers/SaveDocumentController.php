@@ -42,7 +42,7 @@ class SaveDocumentController extends Controller
         //save signers
         $signerURL = $this->saveSignerDB($document, $request);
 
-//        dispatch(new NotifySigner($document->signers, env("API_URL")));
+        //        dispatch(new NotifySigner($document->signers, env("API_URL")));
 
         return response()->json(['message' => 'Document stored successfully', 'signers' => $signerURL['signers'], 'sender' => $signerURL['sender']]);
     }
@@ -99,7 +99,7 @@ class SaveDocumentController extends Controller
         $signers = $data->input('signers');
         $order = ['customer', 'staff', 'helper'];
 
-        usort($signers, function($a, $b) use ($signers, $order) {
+        usort($signers, function ($a, $b) use ($signers, $order) {
             $typeA = strtolower($a['type']);
             $typeB = strtolower($b['type']);
 
@@ -122,7 +122,14 @@ class SaveDocumentController extends Controller
 
             $signer = $this->storeSigners($document->id, $signerData['name'], $signerData['email'], $signerData['type'] ?? null);
 
-            $signerURL[$signerData['email']] = env("API_URL") . $signer['shortURL'];
+            array_push($signerURL, [
+                "name" => $signerData['name'],
+                "email" => $signerData['email'],
+                "type" => $signerData['type'],
+                "url" => env("API_URL") . $signer['shortURL']
+            ]);
+            // $signerURL[$signerData['email']] = env("API_URL") . $signer['shortURL'];
+
 
             foreach ($signerData['signatures'] as $signatureData) {
                 $signature = new Signature();
@@ -155,6 +162,4 @@ class SaveDocumentController extends Controller
 
         return compact('signer', 'shortURL');
     }
-
-
 }
