@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\SignerType;
 use App\Http\Requests\RequestOTP;
 use App\Http\Requests\StoreSignature;
+use App\Jobs\NotifyCustomer;
 use App\Jobs\NotifySender;
 use App\Models\Document;
 use App\Models\Signer;
@@ -70,7 +71,7 @@ class SignatureController extends Controller
 
         $signerDoc = $this->markDocument($documentObj, $request);
         $documentData = Document::with(['signers' => function ($query) {
-            $query->whereNotIn('type', [SignerType::SENDER]);
+            $query->whereNotIn('type', [SignerType::SENDER])->orderBy('id', 'asc');
         }])->find($documentObj->document->id);
 
         //save document viewed time
@@ -136,13 +137,11 @@ class SignatureController extends Controller
             $document->signed = 1;
             $document->save();
 
-            $associatedNotifiers = Signer::where('document_id', $document->id)->get();
-
-            foreach ($associatedNotifiers as $notifier) {
-                if (isset($notifier->email)) {
-                    dispatch(new NotifySender($notifier, $document));
-                }
+            if (isset($documentObj->email) && $documentObj->type == "customer") {
+                dispatch(new NotifyCustomer($documentObj, $document));
             }
+
+            dispatch(new NotifySender($documentObj, $document));
 
             return response()->json([
                 'message' => 'Record stored successfully',
