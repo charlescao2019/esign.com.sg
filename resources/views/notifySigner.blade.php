@@ -48,7 +48,7 @@
     <div class="card">
         <!-- Logo -->
         <div class="logo">
-            <img width="200px" src="http://127.0.0.1:5173/resources/images/logo/logo.png" alt="Esign.com.sg">
+            <img width="200px" src="https://esign.com.sg/logo.png" alt="Esign.com.sg">
         </div>
 
         <!-- Content -->

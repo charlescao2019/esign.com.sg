@@ -56,7 +56,7 @@
         <div class="card">
             <!-- Logo -->
             <div class="logo">
-                <img class="footerImg" src="{{ resource_path('images/logo/logo.png') }}">
+                <img class="footerImg" src="https://esign.com.sg/logo.png">
             </div>
 
             <!-- Content -->
