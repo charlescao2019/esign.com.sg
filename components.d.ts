@@ -40,6 +40,8 @@ declare module 'vue' {
     CustomRadiosWithImage: typeof import('./resources/js/@core/components/app-form-elements/CustomRadiosWithImage.vue')['default']
     DialogCloseBtn: typeof import('./resources/js/@core/components/DialogCloseBtn.vue')['default']
     DocumentDownload: typeof import('./resources/js/components/app/stepper/DocumentDownload.vue')['default']
+    DocumentDownload2: typeof import('./resources/js/components/app/stepper/DocumentDownload2.vue')['default']
+    DocumentDownload3: typeof import('./resources/js/components/app/stepper/DocumentDownload3.vue')['default']
     DocumentReview: typeof import('./resources/js/components/app/stepper/DocumentReview.vue')['default']
     Draw: typeof import('./resources/js/components/app/signature-tab/Draw.vue')['default']
     DropZone: typeof import('./resources/js/@core/components/DropZone.vue')['default']

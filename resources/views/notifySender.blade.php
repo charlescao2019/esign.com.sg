@@ -56,7 +56,6 @@
         <div class="card">
             <!-- Logo -->
             <div class="logo">
-                <img class="footerImg" src="https://esign.com.sg/logo.png">
             </div>
 
             <!-- Content -->
@@ -87,7 +86,7 @@
                 <!-- Heading: Do you have any question about us? -->
                 <div class="heading">Do you have any question about us?</div>
                 <div class="text">
-                    <p>Write to support <a href="mailto:e-sginature@gmail.com">e-sgin@gmail.com</a></p>
+                    <p>Write to support <a href="mailto:charles.cao@esign.com.sg">charles.cao@esign.com.sg</a></p>
                 </div>
 
                 <div class="text" style="margin-top:35px">Best,</div>

@@ -213,20 +213,10 @@ const handleSigner = async () => {
             v-for="(signerValue, index) in signer.all"
             :key="index"
           >
-            <VCol
-              v-if="(signer.type?.toUpperCase() === 'CUSTOMER' && signerValue.type?.toUpperCase() === 'CUSTOMER') || (signer.type?.toUpperCase() !== 'CUSTOMER')"
-              cols="12"
-            >
-              <VAlert
-                border="start"
-                :border-color="(signerValue.type.toUpperCase() === 'CUSTOMER' || signerValue.type.toUpperCase() === 'HELPER') ? 'warning' : 'primary'"
-              >
+            <VCol cols="12" v-if="signerValue.type?.toUpperCase() === 'CUSTOMER'">
+              <VAlert border="start" border-color="warning">
                 <VRow>
-                  <VCol
-                    cols="12"
-                    md="6"
-                    class="signStatus"
-                  >
+                  <VCol cols="12" md="6" class="signStatus">
                     <h4>
                       {{ signerValue.name }}
                       <VChip
@@ -328,22 +318,7 @@ const handleSigner = async () => {
                       </VTooltip>
                     </a>
 
-                    <span v-if="(signerValue.type !== 'customer' && signerValue.signed === 0)">
-                      <button @click="authenticateSigner(signerValue.id)">
-                        <img
-                          height="50px"
-                          width="50px"
-                          :src="Authenticate"
-                          alt="login"
-                        >
-                        <VTooltip
-                          activator="parent"
-                          location="bottom"
-                        >ESign</VTooltip>
-                      </button>
-                    </span>
-
-                    <span v-else-if="signerValue.signed !== 0">
+                    <span v-if="signerValue.signed !== 0">
                       <a
                         :href="document.downloadUrl"
                         :download="document.getDocumentData.original_filename"
@@ -361,10 +336,8 @@ const handleSigner = async () => {
                       </a>
                     </span>
 
-
-
                     <span
-                      v-else-if="signerValue.type === 'customer' && signerValue.signed === 0"
+                      v-if="signerValue.signed === 0"
                       cols="2"
                     >
                       <button @click="notifyCustomer(document.getDocumentData.short_url)">
@@ -384,6 +357,292 @@ const handleSigner = async () => {
                 </VRow>
               </VAlert>
             </VCol>
+
+            <VCol cols="12" v-if="signerValue.type?.toUpperCase() === 'STAFF'">
+              <VAlert border="start" border-color="primary">
+                <VRow>
+                  <VCol cols="12" md="6" class="signStatus">
+                    <h4>
+                      {{ signerValue.name }}
+                      <VChip
+                        label
+                        :color="signerValue.type === 'sender' ? 'primary' : 'info'"
+                        size="small"
+                        class="text-capitalize"
+                      >
+                        {{ signerValue.type }}
+                      </VChip>
+                    </h4>
+                    <span>{{ signerValue.email }}</span>
+                  </VCol>
+                  <VCol
+                    class="text-md-right"
+                    cols="12"
+                    md="6"
+                  >
+                    <h4>{{ signerValue.signed_time ? "Signed at" : "" }}</h4>
+                    <span
+                      class="text-h6"
+                      :class="{ 'text-bold': !signerValue.signed_time }"
+                    >
+                      {{ signerValue.signed_time ? formatDateTime(signerValue.signed_time) : "Not signed yet" }}
+                    </span>
+                    <h4>{{ signerValue.viewed_time ? "Viewed at" : "" }}</h4>
+                    <span
+                      class="text-h6"
+                      :class="{ 'text-bold': !signerValue.viewed_time }"
+                    >
+                      {{ signerValue.viewed_time ? formatDateTime(signerValue.viewed_time) : 'Not viewed yet' }}
+                    </span>
+                  </VCol>
+                  <VCol class="d-flex align-center justify-space-between">
+                    <div
+                      class="documentURLCopy"
+                      :style="{ border: (signerValue.type.toUpperCase() === 'CUSTOMER' || signerValue.type.toUpperCase() === 'HELPER') ? '1px solid rgb(255,159,67)':'1px solid rgb(115,103,240)'}"
+                    >
+                      <template v-if="signerValue.signed">
+                        <span class="urlCopyField border-amber-2">
+                          {{ document.downloadUrl.length > 40 ? document.downloadUrl + '...' : document.downloadUrl }}
+                          <VTooltip
+                            activator="parent"
+                            location="bottom"
+                          >
+                            {{ document.downloadUrl }}
+                          </VTooltip>
+                        </span>
+                      </template>
+                      <template v-else>
+                        <span class="urlCopyField board-">
+                          {{
+                            (host + signerValue.short_url).length > 40 ? (host + signerValue.short_url) + '...' : (host + signerValue.short_url)
+                          }}
+                          <VTooltip
+                            activator="parent"
+                            location="bottom"
+                          >
+                            {{ host + signerValue.short_url }}
+                          </VTooltip>
+                        </span>
+                      </template>
+                      <VBtn
+                        :ref="'copy_' + index"
+                        class="documentURLCopyBtn"
+                        variant="outlined"
+                        @click="copyToClipboard(index, signerValue.signed ? document.downloadUrl : host + signerValue.short_url)"
+                      >
+                        <VIcon
+                          :icon="copiedIndex.includes(index) ? 'tabler-copy-check' : 'tabler-copy'"
+                          size="20"
+                          class="flip-in-rtl"
+                        />
+                        <VTooltip
+                          activator="parent"
+                          location="bottom"
+                        >
+                          Copy
+                        </VTooltip>
+                      </VBtn>
+                    </div>
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      :href="signerValue.signed
+                        ? 'https://api.whatsapp.com/send?phone=' + WHATSAPP_NUMBER + '&text=' + document.downloadUrl
+                        : 'https://api.whatsapp.com/send?phone=' + WHATSAPP_NUMBER + '&text=' + host + signerValue.short_url"
+                    >
+                      <VIcon
+                        icon="tabler-brand-whatsapp"
+                        size="50"
+                        color="success"
+                        class="flip-in-rtl"
+                      />
+                      <VTooltip
+                        activator="parent"
+                        location="bottom"
+                      >WhatsApp
+                      </VTooltip>
+                    </a>
+
+                    <span v-if="signerValue.signed !== 0">
+                      <a
+                        :href="document.downloadUrl"
+                        :download="document.getDocumentData.original_filename"
+                      >
+                        <VIcon
+                          icon="tabler-file-check"
+                          size="50"
+                          color="success"
+                          class="flip-in-rtl icon-size"
+                        />
+                        <VTooltip
+                          activator="parent"
+                          location="bottom"
+                        >Already Signed</VTooltip>
+                      </a>
+                    </span>
+
+                    <span v-if="signerValue.signed === 0" cols="2">
+                      <button @click="authenticateSigner(signerValue.id)">
+                        <img
+                          height="50px"
+                          width="50px"
+                          :src="Authenticate"
+                          alt="login"
+                        >
+                        <VTooltip
+                          activator="parent"
+                          location="bottom"
+                        >ESign</VTooltip>
+                      </button>
+                    </span>
+                  </VCol>
+                </VRow>
+              </VAlert>
+            </VCol>
+		  
+            <VCol cols="12" v-if="signerValue.type?.toUpperCase() === 'HELPER'">
+              <VAlert border="start" border-color="warning">
+                <VRow>
+                  <VCol cols="12" md="6" class="signStatus">
+                    <h4>
+                      {{ signerValue.name }}
+                      <VChip
+                        label
+                        :color="signerValue.type === 'sender' ? 'primary' : 'info'"
+                        size="small"
+                        class="text-capitalize"
+                      >
+                        {{ signerValue.type }}
+                      </VChip>
+                    </h4>
+                    <span>{{ signerValue.email }}</span>
+                  </VCol>
+                  <VCol
+                    class="text-md-right"
+                    cols="12"
+                    md="6"
+                  >
+                    <h4>{{ signerValue.signed_time ? "Signed at" : "" }}</h4>
+                    <span
+                      class="text-h6"
+                      :class="{ 'text-bold': !signerValue.signed_time }"
+                    >
+                      {{ signerValue.signed_time ? formatDateTime(signerValue.signed_time) : "Not signed yet" }}
+                    </span>
+                    <h4>{{ signerValue.viewed_time ? "Viewed at" : "" }}</h4>
+                    <span
+                      class="text-h6"
+                      :class="{ 'text-bold': !signerValue.viewed_time }"
+                    >
+                      {{ signerValue.viewed_time ? formatDateTime(signerValue.viewed_time) : 'Not viewed yet' }}
+                    </span>
+                  </VCol>
+                  <VCol class="d-flex align-center justify-space-between">
+                    <div
+                      class="documentURLCopy"
+                      :style="{ border: (signerValue.type.toUpperCase() === 'CUSTOMER' || signerValue.type.toUpperCase() === 'HELPER') ? '1px solid rgb(255,159,67)':'1px solid rgb(115,103,240)'}"
+                    >
+                      <template v-if="signerValue.signed">
+                        <span class="urlCopyField border-amber-2">
+                          {{ document.downloadUrl.length > 40 ? document.downloadUrl + '...' : document.downloadUrl }}
+                          <VTooltip
+                            activator="parent"
+                            location="bottom"
+                          >
+                            {{ document.downloadUrl }}
+                          </VTooltip>
+                        </span>
+                      </template>
+                      <template v-else>
+                        <span class="urlCopyField board-">
+                          {{
+                            (host + signerValue.short_url).length > 40 ? (host + signerValue.short_url) + '...' : (host + signerValue.short_url)
+                          }}
+                          <VTooltip
+                            activator="parent"
+                            location="bottom"
+                          >
+                            {{ host + signerValue.short_url }}
+                          </VTooltip>
+                        </span>
+                      </template>
+                      <VBtn
+                        :ref="'copy_' + index"
+                        class="documentURLCopyBtn"
+                        variant="outlined"
+                        @click="copyToClipboard(index, signerValue.signed ? document.downloadUrl : host + signerValue.short_url)"
+                      >
+                        <VIcon
+                          :icon="copiedIndex.includes(index) ? 'tabler-copy-check' : 'tabler-copy'"
+                          size="20"
+                          class="flip-in-rtl"
+                        />
+                        <VTooltip
+                          activator="parent"
+                          location="bottom"
+                        >
+                          Copy
+                        </VTooltip>
+                      </VBtn>
+                    </div>
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      :href="signerValue.signed
+                        ? 'https://api.whatsapp.com/send?phone=' + WHATSAPP_NUMBER + '&text=' + document.downloadUrl
+                        : 'https://api.whatsapp.com/send?phone=' + WHATSAPP_NUMBER + '&text=' + host + signerValue.short_url"
+                    >
+                      <VIcon
+                        icon="tabler-brand-whatsapp"
+                        size="50"
+                        color="success"
+                        class="flip-in-rtl"
+                      />
+                      <VTooltip
+                        activator="parent"
+                        location="bottom"
+                      >WhatsApp
+                      </VTooltip>
+                    </a>
+
+                    <span v-if="signerValue.signed !== 0">
+                      <a
+                        :href="document.downloadUrl"
+                        :download="document.getDocumentData.original_filename"
+                      >
+                        <VIcon
+                          icon="tabler-file-check"
+                          size="50"
+                          color="success"
+                          class="flip-in-rtl icon-size"
+                        />
+                        <VTooltip
+                          activator="parent"
+                          location="bottom"
+                        >Already Signed</VTooltip>
+                      </a>
+                    </span>
+
+                    <span v-if="signerValue.signed === 0" cols="2">
+                      <button @click="authenticateSigner(signerValue.id)">
+                        <img
+                          height="50px"
+                          width="50px"
+                          :src="Authenticate"
+                          alt="login"
+                        >
+                        <VTooltip
+                          activator="parent"
+                          location="bottom"
+                        >ESign</VTooltip>
+                      </button>
+                    </span>
+                  </VCol>
+                </VRow>
+              </VAlert>
+            </VCol>
+
+
           </template>
         </VRow>
       </template>
