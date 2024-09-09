@@ -53,6 +53,8 @@
         <!-- Content -->
         <div class="content">
 
+            Dear {{print_r($signers)}}
+
             <!-- Text -->
             <p class="text">You have been invited to sign a document. Please visit the below url.</p>
 
@@ -70,7 +72,7 @@
             <!-- Heading: Do you have any question about us? -->
             <div class="heading">Do you have any question about us?</div>
             <div class="text">
-                <p>Write to support <a href="mailto:charles.cao@esign.com.sg">charles.cao@esign.com.sg</a></p>
+                <p>Write to support <a href="mailto:charles.cao@esign.com.sg">info@esign.com.sg</a></p>
             </div>
 
             <div class="text" style="margin-top:35px">Best,</div>
