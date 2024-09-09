@@ -38,7 +38,7 @@ class SignerController extends Controller
     public function notifyCustomer($shortUrl)
     {
         $document = Document::with(['signers' => function($query) {
-            $query->where('type', '=', SignerType::CUSTOMER);
+            $query->where('type', '=', SignerType::CUSTOMER)->orWhere('type', '=', SignerType::SENDER);
         }])->where('short_url', $shortUrl)->first();
 
         if (!empty($document->signers)) {
