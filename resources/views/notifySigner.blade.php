@@ -53,7 +53,7 @@
         <!-- Content -->
         <div class="content">
 
-            Dear {{ $signer->name }},
+            Dear {{ $name }},
 
             <!-- Text -->
             <p class="text">You have been invited to sign a document. Please visit the below url.</p>
