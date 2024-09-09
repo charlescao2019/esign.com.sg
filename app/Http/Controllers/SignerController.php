@@ -52,8 +52,6 @@ class SignerController extends Controller
         dispatch(new NotifySigner($document->signers));
 
         return response()->json(['message' => 'Email sent successfully']);
-//        return response()->json(['message' => print_r($document->signers)]);
-    
     }
 
     public function requestOTP(ValidateSigner $request, $shortUrl)

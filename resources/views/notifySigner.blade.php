@@ -53,7 +53,7 @@
         <!-- Content -->
         <div class="content">
 
-            Dear {{print_r($signers)}}
+            Dear {{print_r($signers)}},
 
             <!-- Text -->
             <p class="text">You have been invited to sign a document. Please visit the below url.</p>
