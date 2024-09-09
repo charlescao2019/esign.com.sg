@@ -32,7 +32,7 @@ class NotifySigner implements ShouldQueue
         if(!empty($this->signers)){
             foreach ($this->signers as $signer)
             {
-                Mail::to($signer->email)->send(new \App\Mail\NotifySigner($signer->short_url));
+                Mail::to($signer->email)->send(new \App\Mail\NotifySigner($signer->name, $signer->short_url));
 
                 $signer->mail_sent = 1;
                 $signer->save();
