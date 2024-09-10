@@ -39,6 +39,6 @@ class NotifySigner extends Mailable
         return
             $this->from(env('MAIL_FROM_ADDRESS'), 'E-sign')
                 ->subject("You Have Been Assigned As Signer")
-                ->view('notifySigner', ['document'=>$document, 'name' => $this->name, 'url' => $this->url]);
+                ->view('notifySigner', ['document' => $this->document, 'name' => $this->name, 'url' => $this->url]);
     }
 }
