@@ -59,16 +59,21 @@
             <!-- Text -->
             <p class="text">
             Your customer has been sent an email to sign the document. Please check the following document.</p>
+            <!-- OTP Box -->
+            <div class="otp-box">
+                <a href='{{ env("API_URL").$url ?? "" }}'><strong>This document has been sent to your Customer</strong></a>
+            </div>
+
 @else
             <!-- Text -->
             <p class="text">
             You have been invited to sign a document. Please check the following document.</p>
-@endif
-
             <!-- OTP Box -->
             <div class="otp-box">
                 <a href='{{ env("API_URL").$url ?? "" }}'><strong>Please Sign Your Employment Documents</strong></a>
             </div>
+
+@endif
 
             <!-- Heading: What is E-signature -->
             <div class="heading">What is Esign.com.sg</div>
