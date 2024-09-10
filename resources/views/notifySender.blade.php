@@ -61,7 +61,7 @@
             <!-- Content -->
             <div class="content">
                 
-                To: <div class="text">{{ $document->sender_name }}</div>
+                <div class="text">To: {{ $document->sender_name }}</div>
                 <div class="text">{{ $document->company_name }}</div>
 
                 <!-- Text -->
