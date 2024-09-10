@@ -61,12 +61,12 @@
             <!-- Content -->
             <div class="content">
                 
-                <div class="text">{{ $document->sender_name }}</div>
+                To: <div class="text">{{ $document->sender_name }}</div>
                 <div class="text">{{ $document->company_name }}</div>
 
-                Dear {{ $document->sender_name }},
-
                 <!-- Text -->
+                <p class="text">Dear {{ $document->sender_name }},</p>
+
                 <p class="text">{{ $senderName }} has signed your document.</p>
 
                 @if ($document->completed_signed)
