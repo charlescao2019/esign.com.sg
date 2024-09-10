@@ -49,7 +49,7 @@ class SignerController extends Controller
             }
         }
 
-        dispatch(new NotifySigner($document->signers));
+        dispatch(new NotifySigner($document, $document->signers));
 
         return response()->json(['message' => 'Email sent successfully']);
     }

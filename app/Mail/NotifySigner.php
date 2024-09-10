@@ -18,10 +18,13 @@ class NotifySigner extends Mailable
      * @return void
      */
 
-    public $url;
+     public $document;
+     public $name;
+     public $url;
 
-    public function __construct($name, $url)
+    public function __construct($document, $name, $url)
     {
+        $this->document = $document;
         $this->url = $url;
         $this->name = $name;
     }
@@ -36,6 +39,6 @@ class NotifySigner extends Mailable
         return
             $this->from(env('MAIL_FROM_ADDRESS'), 'E-sign')
                 ->subject("You Have Been Assigned As Signer")
-                ->view('notifySigner', ['name' => $this->name, 'url' => $this->url]);
+                ->view('notifySigner', ['document'=>$document, 'name' => $this->name, 'url' => $this->url]);
     }
 }

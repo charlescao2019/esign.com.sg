@@ -13,14 +13,16 @@ class NotifySigner implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $document;
     public $signers;
     public $url;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($signers)
+    public function __construct($document, $signers)
     {
+        $this->document = $document;
         $this->signers = $signers;
     }
 
@@ -32,7 +34,7 @@ class NotifySigner implements ShouldQueue
         if(!empty($this->signers)){
             foreach ($this->signers as $signer)
             {
-                Mail::to($signer->email)->send(new \App\Mail\NotifySigner($signer->name, $signer->short_url));
+                Mail::to($signer->email)->send(new \App\Mail\NotifySigner($document, $signer->name, $signer->short_url));
 
                 $signer->mail_sent = 1;
                 $signer->save();
