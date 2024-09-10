@@ -56,11 +56,11 @@
             Dear {{ $name }},
 
             <!-- Text -->
-            <p class="text">You have been invited to sign a document. Please visit the below url.</p>
+            <p class="text">You have been invited to sign a document. Please check the following document.</p>
 
             <!-- OTP Box -->
             <div class="otp-box">
-                <strong>{{ env("API_URL").$url ?? "" }}</strong>
+                <a href='{{ env("API_URL").$url ?? "" }}'><strong>Please Sign Your Employment Documents</strong></a>
             </div>
 
             <!-- Heading: What is E-signature -->
@@ -76,7 +76,8 @@
             </div>
 
             <div class="text" style="margin-top:35px">Best,</div>
-            <div class="text">Esign Team</div>
+            <div class="text">{{ $document->sender_name }}</div>
+            <div class="text">{{ $document->company_name }}</div>
         </div>
     </div>
 </div>
