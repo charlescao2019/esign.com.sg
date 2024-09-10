@@ -55,16 +55,24 @@
 
             Dear {{ $name }},
 
-@if(isset($type) && (strtolower($type) == 'sender'))
+        @if(isset($type) && (strtolower($type) == 'sender'))
             <!-- Text -->
             <p class="text">
-            Your customer has been sent an email to sign the document. Please check the following document.</p>
+            You has emailed the following document to your customer. 
+            Please check the following document.</p>
             <!-- OTP Box -->
             <div class="otp-box">
                 <a href='{{ env("API_URL").$url ?? "" }}'><strong>This document has been sent to your Customer</strong></a>
             </div>
 
-@else
+            <!-- Heading: What is E-signature -->
+            <div class="heading">What is Bestmaid E-Sign</div>
+            <div class="text">
+            <p>With Bestmaid E-Sign, you can collect signatures on documents through any channel. Save time, paper
+            and money. All with legal validity</p>
+            </div>
+
+        @else
             <!-- Text -->
             <p class="text">
             You have been invited to sign a document. Please check the following document.</p>
@@ -72,14 +80,7 @@
             <div class="otp-box">
                 <a href='{{ env("API_URL").$url ?? "" }}'><strong>Please Sign Your Employment Documents</strong></a>
             </div>
-
-@endif
-
-            <!-- Heading: What is E-signature -->
-            <div class="heading">What is Esign.com.sg</div>
-            <div class="text">
-                <p>With Esign.com.sg you can collect signatures on documents through any channel. Save time, paper and money. All with legal validity</p>
-            </div>
+        @endif
 
             <!-- Heading: Do you have any question about us? -->
             <div class="heading">Do you have any question about us?</div>
@@ -89,12 +90,12 @@
 
             <div class="text" style="margin-top:35px">Best,</div>
 
-@if(isset($type) && (strtolower($type) == 'sender'))
-            <div class="text">E-Sign Team</div>
-@else
+        @if(isset($type) && (strtolower($type) == 'sender'))
+            <div class="text">Bestmaid E-Sign</div>
+        @else
             <div class="text">{{ $document->sender_name }}</div>
             <div class="text">{{ $document->company_name }}</div>
-@endif
+        @endif
 
         </div>
     </div>

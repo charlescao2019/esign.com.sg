@@ -60,13 +60,17 @@
 
             <!-- Content -->
             <div class="content">
+                
+                <div class="text">{{ $document->sender_name }}</div>
+                <div class="text">{{ $document->company_name }}</div>
+
+                Dear {{ $document->sender_name }},
 
                 <!-- Text -->
-                <p class="text">A new signature has been added to your document by {{ $senderName }}
-                    ({{ $senderEmail }})</p>
+                <p class="text">{{ $senderName }} has signed your document.</p>
 
                 @if ($document->completed_signed)
-                    <p>All Signer Has completed their sign</p>
+                    <p>Now, all parties have signed.</p>
                 @else
                     <p>As it stands, {{ $document->total_signed }} out of {{ $document->total_signer }} required
                         signatures have been obtained.</p>
@@ -77,9 +81,9 @@
                 </div>
 
                 <!-- Heading: What is E-signature -->
-                <div class="heading">What is Esign.com.sg</div>
+                <div class="heading">What is Bestmaid E-Sign</div>
                 <div class="text">
-                    <p>With Esign.com.sg you can collect signatures on documents through any channel. Save time, paper
+                    <p>With Bestmaid E-Sign, you can collect signatures on documents through any channel. Save time, paper
                         and money. All with legal validity</p>
                 </div>
 
@@ -90,7 +94,7 @@
                 </div>
 
                 <div class="text" style="margin-top:35px">Best,</div>
-                <div class="text">Esign Team</div>
+                <div class="text">Bestmaid E-Sign</div>
             </div>
         </div>
     </div>
