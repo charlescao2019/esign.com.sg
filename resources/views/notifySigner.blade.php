@@ -55,8 +55,15 @@
 
             Dear {{ $name }},
 
+@if(isset($type) && (strtolower($type) == 'sender'))
             <!-- Text -->
-            <p class="text">You have been invited to sign a document. Please check the following document.</p>
+            <p class="text">
+            Your customer has been sent an email to sign the document. Please check the following document.</p>
+@else
+            <!-- Text -->
+            <p class="text">
+            You have been invited to sign a document. Please check the following document.</p>
+@endif
 
             <!-- OTP Box -->
             <div class="otp-box">
@@ -76,8 +83,14 @@
             </div>
 
             <div class="text" style="margin-top:35px">Best,</div>
+
+@if(isset($type) && (strtolower($type) == 'sender'))
+            <div class="text">E-Sign Team</div>
+@else
             <div class="text">{{ $document->sender_name }}</div>
             <div class="text">{{ $document->company_name }}</div>
+@endif
+
         </div>
     </div>
 </div>
