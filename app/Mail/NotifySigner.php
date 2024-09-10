@@ -23,7 +23,7 @@ class NotifySigner extends Mailable
      public $name;
      public $url;
 
-    public function __construct($document, $name, $url)
+    public function __construct($document, $type, $name, $url)
     {
         $this->document = $document;
         $this->type = $type;
