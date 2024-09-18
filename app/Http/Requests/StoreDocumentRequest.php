@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Constants\SignerType;
 use Illuminate\Validation\Rule;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class StoreDocumentRequest extends FormRequest
 {
@@ -13,7 +14,19 @@ class StoreDocumentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        // Retrieve the API token from the form data
+        $apiToken = $this->input('api_token');
+
+        // Check if the API token is valid
+        if ($apiToken !== env('API_TOKEN')) {
+            // Set a custom validation message
+            $this->setCustomMessages([
+                'api_token.invalid' => 'The API token is invalid.',
+            ]);
+            return false; // Authorization failed
+        }
+
+        return true; // Authorization passed        
     }
 
     /**
@@ -42,6 +55,7 @@ class StoreDocumentRequest extends FormRequest
             'signers.*.signatures.*.height' => 'numeric|min:10',
             'signers.*.signatures.*.width' => 'numeric',
             'signers.*.signatures.*.page_no' => 'required|numeric',
+            'api_token' => 'required|string', // Optional: Include this if you want to validate its presence            
         ];
     }
 
@@ -77,6 +91,7 @@ class StoreDocumentRequest extends FormRequest
             'signers.*.signatures.*.width.numeric' => 'Each sign information\'s width must be a number.',
             'signers.*.signatures.*.page_no.required' => 'Each sign information must have a page number.',
             'signers.*.signatures.*.page_no.numeric' => 'Each sign information\'s page number must be a number.',
+            'api_token.invalid' => 'The API token is invalid.', // Custom message for invalid API token
         ];
     }
 }
