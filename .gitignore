@@ -4,9 +4,7 @@
 /public/storage
 /storage/*.key
 /vendor
-.env
 .env.backup
-.env.production
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -37,7 +35,6 @@ dist-ssr
 # 👉 Custom Git ignores
 
 # Editor directories and files
-.vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
 !.vscode/*.code-snippets
@@ -57,5 +54,5 @@ resources/js/plugins/iconify/icons.css
 public/mockServiceWorker.js
 
 # Env files
-.env*
 !.env.example
+config.bat
